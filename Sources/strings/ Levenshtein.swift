@@ -40,14 +40,16 @@ public final class Levenshtein {
     }
     
     // Equal strings
-    guard sourceStartTrim <= sourceEndTrim &&
-          destinatioStartTrim <= destinatioEndTrim else {
+    guard sourceStartTrim != source.endIndex ||
+          destinatioStartTrim != destination.endIndex else {
       return 0
     }
+    
     guard sourceStartTrim < sourceEndTrim else {
       return destination.distance(from: destinatioStartTrim,
                                   to: destinatioEndTrim)
     }
+    
     guard destinatioStartTrim < destinatioEndTrim else {
       return source.distance(from: sourceStartTrim,
                              to: sourceEndTrim)
