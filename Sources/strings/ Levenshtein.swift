@@ -16,8 +16,9 @@ public final class Levenshtein {
   func distance(to destination: String) -> Int {
     var sourceStartTrim = source.startIndex
     var destinatioStartTrim = destination.startIndex
-    while sourceStartTrim < source.endIndex && destinatioStartTrim < destination.endIndex &&
-            source[sourceStartTrim] == destination[destinatioStartTrim] {
+    while sourceStartTrim < source.endIndex &&
+          destinatioStartTrim < destination.endIndex &&
+          source[sourceStartTrim] == destination[destinatioStartTrim] {
       source.formIndex(after: &sourceStartTrim)
       destination.formIndex(after: &destinatioStartTrim)
     }
@@ -25,7 +26,8 @@ public final class Levenshtein {
     var sourceEndTrim = source.endIndex
     var destinatioEndTrim = destination.endIndex
     
-    while sourceEndTrim > sourceStartTrim && destinatioEndTrim > destinatioStartTrim {
+    while sourceEndTrim > sourceStartTrim &&
+          destinatioEndTrim > destinatioStartTrim {
       let sourceIdx = source.index(before: sourceEndTrim)
       let destinationIdx = source.index(before: destinatioEndTrim)
 
@@ -38,14 +40,17 @@ public final class Levenshtein {
     }
     
     // Equal strings
-    guard sourceStartTrim <= sourceEndTrim && destinatioStartTrim <= destinatioEndTrim else {
+    guard sourceStartTrim <= sourceEndTrim &&
+          destinatioStartTrim <= destinatioEndTrim else {
       return 0
     }
     guard sourceStartTrim < sourceEndTrim else {
-      return destination.distance(from: destinatioStartTrim, to: destinatioEndTrim)
+      return destination.distance(from: destinatioStartTrim,
+                                  to: destinatioEndTrim)
     }
     guard destinatioStartTrim < destinatioEndTrim else {
-      return source.distance(from: sourceStartTrim, to: sourceEndTrim)
+      return source.distance(from: sourceStartTrim,
+                             to: sourceEndTrim)
     }
     
     let newSource = source[sourceStartTrim..<sourceEndTrim]
