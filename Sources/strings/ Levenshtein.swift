@@ -68,17 +68,17 @@ public final class Levenshtein {
     matrix.append([Int](repeating: 0, count: n &+ 1))
     matrix[1][0] = 1
     
+    var sourceIdx = newSource.startIndex
     for i in 1...m {
       // Previous.
       matrix[0][0] = i &- 1
       // Current.
       matrix[1][0] = i
+      
+      var destinationIdx = newDestination.startIndex
       for j in 1...n {
-        let sourceChar = newSource[
-          newSource.index(newSource.startIndex, offsetBy: i &- 1)]
-        let destinationChar = newDestination[
-          newDestination.index(newDestination.startIndex, offsetBy: j &- 1)]
-        
+        let sourceChar = newSource[sourceIdx]
+        let destinationChar = newDestination[destinationIdx]
         // If characteres are equal for the levenshtein algorithm the minimum will
         // always be the substitution cost, so we can fast path here in order to
         // avoid min calls.
@@ -91,7 +91,12 @@ public final class Levenshtein {
           let minimum = SIMD3(deletion, insertion, substitution).min()
           matrix[1][j] = minimum &+ 1
         }
+        // j += 1
+        newDestination.formIndex(after: &destinationIdx)
       }
+      // i += 1
+      newSource.formIndex(after: &sourceIdx)
+      
       if i != m {
         matrix.swapAt(0, 1)
       }
