@@ -63,17 +63,14 @@ public final class Levenshtein {
     
     // Initialize the levenshtein matrix with only two rows
     // current and previous.
-    var matrix: [[Int]] = []
-    matrix.append((0...n).map{ $0 })
-    matrix.append([Int](repeating: 0, count: n &+ 1))
-    matrix[1][0] = 1
+    var previousRow = (0...n).map{ $0 }
+    var currentRow = [Int](repeating: 0, count: n &+ 1)
+    currentRow[0] = 1
     
     var sourceIdx = newSource.startIndex
     for i in 1...m {
-      // Previous.
-      matrix[0][0] = i &- 1
-      // Current.
-      matrix[1][0] = i
+      previousRow[0] = i &- 1
+      currentRow[0] = i
       
       var destinationIdx = newDestination.startIndex
       for j in 1...n {
@@ -83,13 +80,13 @@ public final class Levenshtein {
         // always be the substitution cost, so we can fast path here in order to
         // avoid min calls.
         if sourceChar == destinationChar {
-          matrix[1][j] = matrix[0][j &- 1]
+          currentRow[j] = previousRow[j &- 1]
         } else {
-          let deletion: Int = matrix[0][j]
-          let insertion: Int = matrix[1][j &- 1]
-          let substitution: Int = matrix[0][j &- 1]
+          let deletion: Int = previousRow[j]
+          let insertion: Int = currentRow[j &- 1]
+          let substitution: Int = previousRow[j &- 1]
           let minimum = SIMD3(deletion, insertion, substitution).min()
-          matrix[1][j] = minimum &+ 1
+          currentRow[j] = minimum &+ 1
         }
         // j += 1
         newDestination.formIndex(after: &destinationIdx)
@@ -98,10 +95,10 @@ public final class Levenshtein {
       newSource.formIndex(after: &sourceIdx)
       
       if i != m {
-        matrix.swapAt(0, 1)
+        swap(&previousRow, &currentRow)
       }
     }
 
-    return matrix[1][n]
+    return currentRow[n]
   }
 }
