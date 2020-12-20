@@ -94,7 +94,7 @@ public final class Levenshtein {
       // i += 1
       newSource.formIndex(after: &sourceIdx)
       
-      if i != m {
+      if _fastPath(i != m) {
         swap(&previousRow, &currentRow)
       }
     }
