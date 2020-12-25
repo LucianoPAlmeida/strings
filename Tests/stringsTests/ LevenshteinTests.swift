@@ -10,20 +10,21 @@ import XCTest
 @testable import strings
 
 final class LevenshteinTests: XCTestCase {
-    func testLevenshteinDistances() {
-      XCTAssertEqual(Levenshtein("friend").distance(to: "fresh"), 3)
-      XCTAssertEqual(Levenshtein("friend").distance(to: "friend"), 0)
-      XCTAssertEqual(Levenshtein("friend").distance(to: "fried"), 1)
-      XCTAssertEqual(Levenshtein("rick").distance(to: "rcik"), 2)
-      XCTAssertEqual(Levenshtein("rick").distance(to: "irkc"), 3)
-      XCTAssertEqual(Levenshtein("irkc").distance(to: "rcik"), 4)
-      XCTAssertEqual(Levenshtein("test").distance(to: "team"), 2)
-      XCTAssertEqual(Levenshtein("").distance(to: "team"), 4)
-      XCTAssertEqual(Levenshtein("test").distance(to: ""), 4)
-      XCTAssertEqual(Levenshtein("adlsajdlsa").distance(to: "asv"), 8)
-    }
+  
+  func testLevenshteinDistances() {
+    XCTAssertEqual("friend".levenshteinDistance(to: "fresh"), 3)
+    XCTAssertEqual("friend".levenshteinDistance(to: "friend"), 0)
+    XCTAssertEqual("friend".levenshteinDistance(to: "fried"), 1)
+    XCTAssertEqual("rick".levenshteinDistance(to: "rcik"), 2)
+    XCTAssertEqual("rick".levenshteinDistance(to: "irkc"), 3)
+    XCTAssertEqual("irkc".levenshteinDistance(to: "rcik"), 4)
+    XCTAssertEqual("test".levenshteinDistance(to: "team"), 2)
+    XCTAssertEqual("".levenshteinDistance(to: "team"), 4)
+    XCTAssertEqual("test".levenshteinDistance(to: ""), 4)
+    XCTAssertEqual("adlsajdlsa".levenshteinDistance(to: "asv"), 8)
+  }
 
-    static var allTests = [
-        ("testLevenshteinDistances", testLevenshteinDistances),
-    ]
+  static var allTests = [
+    ("testLevenshteinDistances", testLevenshteinDistances),
+  ]
 }

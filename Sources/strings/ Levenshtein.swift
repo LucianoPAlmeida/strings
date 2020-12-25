@@ -4,7 +4,8 @@
 //  Created by Luciano Almeida on 15/12/20.
 //
 
-public final class Levenshtein {
+@frozen
+public struct Levenshtein {
   public let source: String
   
   @inlinable
@@ -13,7 +14,8 @@ public final class Levenshtein {
   }
   
   @inlinable
-  func distance(to destination: String) -> Int {
+  @_specialize(where S == String)
+  func distance<S: StringProtocol>(to destination: S) -> Int {
     var sourceStartTrim = source.startIndex
     var destinatioStartTrim = destination.startIndex
     while sourceStartTrim < source.endIndex &&
@@ -31,7 +33,7 @@ public final class Levenshtein {
       let sourceIdx = source.index(before: sourceEndTrim)
       let destinationIdx = source.index(before: destinatioEndTrim)
 
-      if (source[sourceIdx] != destination[destinationIdx]) {
+      guard source[sourceIdx] == destination[destinationIdx] else {
         break
       }
 
@@ -75,14 +77,12 @@ public final class Levenshtein {
       
       var destinationIdx = newDestination.startIndex
       for j in 1...n {
-        let sourceChar = newSource[sourceIdx]
-        let destinationChar = newDestination[destinationIdx]
-        // If characteres are equal for the levenshtein algorithm the minimum will
-        // always be the substitution cost, so we can fast path here in order to
-        // avoid min calls.
         previousRow.withUnsafeBufferPointer { (previousBuffer) in
           currentRow.withUnsafeMutableBufferPointer { (currentBuffer) in
-            if sourceChar == destinationChar {
+            // If characteres are equal for the levenshtein algorithm the minimum will
+            // always be the substitution cost, so we can fast path here in order to
+            // avoid min calls.
+            if newSource[sourceIdx] == newDestination[destinationIdx] {
               currentBuffer[j] = previousBuffer[j &- 1]
             } else {
               let deletion: Int = previousBuffer[j]
@@ -105,5 +105,13 @@ public final class Levenshtein {
     }
 
     return currentRow[n]
+  }
+}
+
+public extension String {
+  @inlinable
+  @_specialize(where S == String)
+  func levenshteinDistance<S: StringProtocol>(to destination: S) -> Int {
+    return Levenshtein(self).distance(to: destination)
   }
 }
