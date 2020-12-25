@@ -63,8 +63,9 @@ public final class Levenshtein {
     
     // Initialize the levenshtein matrix with only two rows
     // current and previous.
-    var previousRow = (0...n).map{ $0 }
-    var currentRow = [Int](repeating: 0, count: n &+ 1)
+    var previousRow = ContiguousArray<Int>(0...n)
+    var currentRow = ContiguousArray<Int>(repeating: 0, count: n &+ 1)
+    
     currentRow[0] = 1
     
     var sourceIdx = newSource.startIndex
@@ -79,14 +80,18 @@ public final class Levenshtein {
         // If characteres are equal for the levenshtein algorithm the minimum will
         // always be the substitution cost, so we can fast path here in order to
         // avoid min calls.
-        if sourceChar == destinationChar {
-          currentRow[j] = previousRow[j &- 1]
-        } else {
-          let deletion: Int = previousRow[j]
-          let insertion: Int = currentRow[j &- 1]
-          let substitution: Int = previousRow[j &- 1]
-          let minimum = SIMD3(deletion, insertion, substitution).min()
-          currentRow[j] = minimum &+ 1
+        previousRow.withUnsafeBufferPointer { (previousBuffer) in
+          currentRow.withUnsafeMutableBufferPointer { (currentBuffer) in
+            if sourceChar == destinationChar {
+              currentBuffer[j] = previousBuffer[j &- 1]
+            } else {
+              let deletion: Int = previousBuffer[j]
+              let insertion: Int = currentBuffer[j &- 1]
+              let substitution: Int = previousBuffer[j &- 1]
+              let minimum = SIMD3(deletion, insertion, substitution).min()
+              currentBuffer[j] = minimum &+ 1
+            }
+          }
         }
         // j += 1
         newDestination.formIndex(after: &destinationIdx)
