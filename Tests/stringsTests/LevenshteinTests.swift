@@ -10,7 +10,7 @@ import XCTest
 @testable import strings
 
 final class LevenshteinTests: XCTestCase {
-  
+
   func testLevenshteinDistances() {
     XCTAssertEqual("friend".levenshteinDistance(to: "fresh"), 3)
     XCTAssertEqual("friend".levenshteinDistance(to: "friend"), 0)

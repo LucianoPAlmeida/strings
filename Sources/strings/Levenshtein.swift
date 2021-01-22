@@ -67,44 +67,48 @@ public struct Levenshtein {
     // current and previous.
     var previousRow = ContiguousArray<Int>(0...n)
     var currentRow = ContiguousArray<Int>(repeating: 0, count: n &+ 1)
-    
-    currentRow[0] = 1
-    
-    var sourceIdx = newSource.startIndex
-    for i in 1...m {
-      previousRow[0] = i &- 1
-      currentRow[0] = i
-      
-      var destinationIdx = newDestination.startIndex
-      for j in 1...n {
-        previousRow.withUnsafeBufferPointer { (previousBuffer) in
-          currentRow.withUnsafeMutableBufferPointer { (currentBuffer) in
+  
+    return previousRow.withUnsafeMutableBufferPointer { (previousBuffer) in
+      currentRow.withUnsafeMutableBufferPointer { (currentBuffer) in
+        // Initialize
+        currentBuffer[0] = 1
+        
+        var sourceIdx = newSource.startIndex
+        // Make mutable vars it able to swap and reuse rows.
+        var current = currentBuffer
+        var previous = previousBuffer
+        
+        for i in 1...m {
+          previous[0] = i &- 1
+          current[0] = i
+          
+          var destinationIdx = newDestination.startIndex
+          for j in 1...n {
             // If characteres are equal for the levenshtein algorithm the minimum will
             // always be the substitution cost, so we can fast path here in order to
             // avoid min calls.
             if newSource[sourceIdx] == newDestination[destinationIdx] {
-              currentBuffer[j] = previousBuffer[j &- 1]
+              current[j] = previous[j &- 1]
             } else {
-              let deletion: Int = previousBuffer[j]
-              let insertion: Int = currentBuffer[j &- 1]
-              let substitution: Int = previousBuffer[j &- 1]
+              let deletion: Int = previous[j]
+              let insertion: Int = current[j &- 1]
+              let substitution: Int = previous[j &- 1]
               let minimum = SIMD3(deletion, insertion, substitution).min()
-              currentBuffer[j] = minimum &+ 1
+              current[j] = minimum &+ 1
             }
+            // j += 1
+            newDestination.formIndex(after: &destinationIdx)
+          }
+          // i += 1
+          newSource.formIndex(after: &sourceIdx)
+          
+          if _fastPath(i != m) {
+            swap(&previous, &current)
           }
         }
-        // j += 1
-        newDestination.formIndex(after: &destinationIdx)
-      }
-      // i += 1
-      newSource.formIndex(after: &sourceIdx)
-      
-      if _fastPath(i != m) {
-        swap(&previousRow, &currentRow)
+        return current[n]
       }
     }
-
-    return currentRow[n]
   }
 }
 
