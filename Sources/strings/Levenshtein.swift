@@ -93,8 +93,7 @@ public struct Levenshtein {
               let deletion: Int = previous[j]
               let insertion: Int = current[j &- 1]
               let substitution: Int = previous[j &- 1]
-              let minimum = SIMD3(deletion, insertion, substitution).min()
-              current[j] = minimum &+ 1
+              current[j] = min(deletion, min(insertion, substitution)) &+ 1
             }
             // j += 1
             newDestination.formIndex(after: &destinationIdx)
