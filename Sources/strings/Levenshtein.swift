@@ -79,7 +79,6 @@ public struct Levenshtein {
         var previous = previousBuffer
         
         for i in 1...m {
-          previous[0] = i &- 1
           current[0] = i
           
           var destinationIdx = newDestination.startIndex
