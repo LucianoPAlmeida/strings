@@ -35,5 +35,10 @@ Given that we don't have the whole matrix, the iteration is done by at the end o
 * Reference: 
     * https://en.wikipedia.org/wiki/Levenshtein_distance
 
+## Jaro
+
+* Reference: 
+    * https://www.geeksforgeeks.org/jaro-and-jaro-winkler-similarity/
+
 ## Others
-* Implement other algorithms e.g. Jaro and Hamming distance.
+* Implement other algorithms e.g. Jaro-Winkler, Hamming distance and Damerau–Levenshtein(differs from the Levenshtein by including also transponsitions on the calculation in addition to the insertion, substitution and deletion).
