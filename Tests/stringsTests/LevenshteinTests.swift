@@ -7,7 +7,7 @@
 //
 import XCTest
 
-@testable import strings
+import strings
 
 final class LevenshteinTests: XCTestCase {
 
