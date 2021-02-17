@@ -75,25 +75,25 @@ public struct Jaro {
   
   public func winklerDistance<S: StringProtocol>(
     to destination: S, scaling: Double) -> Double {
-    var jaro = distance(to: destination)
+    let jaro = distance(to: destination)
+    guard jaro > 0.7 else {
+      return jaro
+    }
+      
     // Maximum of 4 characters are allowed in prefix.
     let maxPrefix = 4
-    if jaro > 0.7 {
-      var prefixDistance = 0
-      var sourceStart = source.startIndex
-      var destinationStart = destination.startIndex
-      while sourceStart != source.endIndex &&
-            destinationStart != destination.endIndex &&
-            source[sourceStart] == destination[destinationStart] &&
-            prefixDistance < maxPrefix {
-        source.formIndex(after: &sourceStart)
-        destination.formIndex(after: &destinationStart)
-        prefixDistance += 1
-      }
-      
-      jaro += scaling * Double(prefixDistance) * (1 - jaro)
+    var prefixDistance = 0
+    var sourceStart = source.startIndex
+    var destinationStart = destination.startIndex
+    while sourceStart != source.endIndex &&
+          destinationStart != destination.endIndex &&
+          source[sourceStart] == destination[destinationStart] &&
+          prefixDistance < maxPrefix {
+      source.formIndex(after: &sourceStart)
+      destination.formIndex(after: &destinationStart)
+      prefixDistance += 1
     }
-    return jaro
+    return jaro + (scaling * Double(prefixDistance) * (1 - jaro))
   }
 }
 
