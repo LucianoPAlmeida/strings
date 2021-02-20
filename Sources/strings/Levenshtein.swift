@@ -60,24 +60,21 @@ public struct Levenshtein {
     let newSource = source[sourceStartTrim..<sourceEndTrim]
     let newDestination = destination[destinatioStartTrim..<destinatioEndTrim]
 
-    let m: Int = newSource.count
-    let n: Int = newDestination.count
+    let m = newSource.count
+    let n = newDestination.count
     
     // Initialize the levenshtein matrix with only two rows
     // current and previous.
     var previousRow = ContiguousArray<Int>(0...n)
     var currentRow = ContiguousArray<Int>(repeating: 0, count: n &+ 1)
   
-    return previousRow.withUnsafeMutableBufferPointer { (previousBuffer) in
-      currentRow.withUnsafeMutableBufferPointer { (currentBuffer) in
-        // Initialize
-        currentBuffer[0] = 1
-        
-        var sourceIdx = newSource.startIndex
+    return previousRow.withUnsafeMutableBufferPointer { previousBuffer in
+      currentRow.withUnsafeMutableBufferPointer { currentBuffer in
         // Make mutable vars it able to swap and reuse rows.
         var current = currentBuffer
         var previous = previousBuffer
         
+        var sourceIdx = newSource.startIndex
         for i in 1...m {
           current[0] = i
           
@@ -89,9 +86,9 @@ public struct Levenshtein {
             if newSource[sourceIdx] == newDestination[destinationIdx] {
               current[j] = previous[j &- 1]
             } else {
-              let deletion: Int = previous[j]
-              let insertion: Int = current[j &- 1]
-              let substitution: Int = previous[j &- 1]
+              let deletion = previous[j]
+              let insertion = current[j &- 1]
+              let substitution = previous[j &- 1]
               current[j] = min(deletion, min(insertion, substitution)) &+ 1
             }
             // j += 1
