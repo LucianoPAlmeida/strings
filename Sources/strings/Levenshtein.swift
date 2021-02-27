@@ -3,6 +3,7 @@
 //
 //  Created by Luciano Almeida on 15/12/20.
 //
+//===----------------------------------------------------------------------===//
 
 @frozen
 public struct Levenshtein {
@@ -71,18 +72,19 @@ public struct Levenshtein {
     return previousRow.withUnsafeMutableBufferPointer { previousBuffer in
       currentRow.withUnsafeMutableBufferPointer { currentBuffer in
         // Make mutable vars it able to swap and reuse rows.
-        var current = currentBuffer
-        var previous = previousBuffer
+        var current = previousBuffer
+        var previous = currentBuffer
         
         var sourceIdx = newSource.startIndex
         for i in 1...m {
+          swap(&previous, &current)
           current[0] = i
-          
+
           var destinationIdx = newDestination.startIndex
           for j in 1...n {
-            // If characteres are equal for the levenshtein algorithm the minimum will
-            // always be the substitution cost, so we can fast path here in order to
-            // avoid min calls.
+            // If characteres are equal for the levenshtein algorithm the
+            // minimum will always be the substitution cost, so we can fast
+            // path here in order to avoid min calls.
             if newSource[sourceIdx] == newDestination[destinationIdx] {
               current[j] = previous[j &- 1]
             } else {
@@ -96,10 +98,6 @@ public struct Levenshtein {
           }
           // i += 1
           newSource.formIndex(after: &sourceIdx)
-          
-          if _fastPath(i != m) {
-            swap(&previous, &current)
-          }
         }
         return current[n]
       }

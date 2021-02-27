@@ -62,7 +62,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--format console --iterations 5000"
+            argument = "--format console --time-unit ms"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
