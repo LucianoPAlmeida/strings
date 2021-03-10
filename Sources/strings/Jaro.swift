@@ -57,31 +57,36 @@ public struct Jaro {
   
     guard matches != 0 else { return 0 }
     
-    var transpositions = 0.0
-    var k = 0
-    var iIdx = source.startIndex
-    var kIdx = destination.startIndex
-    for i in 0..<source.count {
-      defer {
-        source.formIndex(after: &iIdx)
-      }
+    let transpositions = sourceMatches.withUnsafeMutableBufferPointer { (sourceMatchesBuffer) in
+      targetMatches.withUnsafeMutableBufferPointer { (targetMatchesBuffer) -> Double in
+        var k = 0
+        var transpositionsCount = 0
+        var iIdx = source.startIndex
+        var kIdx = destination.startIndex
+        for i in 0..<source.count {
+          defer {
+            source.formIndex(after: &iIdx)
+          }
 
-      if !sourceMatches[i] {
-        continue
-      }
+          if !sourceMatchesBuffer[i] {
+            continue
+          }
 
-      while !targetMatches[k] {
-        k &+= 1
-        destination.formIndex(after: &kIdx)
+          while !targetMatchesBuffer[k] {
+            k &+= 1
+            destination.formIndex(after: &kIdx)
+          }
+          
+          if source[iIdx] != destination[kIdx] {
+            transpositionsCount &+= 1
+          }
+          k &+= 1
+          destination.formIndex(after: &kIdx)
+        }
+        return Double(transpositionsCount)
       }
-      
-      if source[iIdx] != destination[kIdx] {
-        transpositions += 1
-      }
-      k &+= 1
-      destination.formIndex(after: &kIdx)
     }
-    
+
     let sourceRatio = matches / Double(source.count)
     let targetRatio = matches / Double(destination.count)
     let transpositionRatio = ((matches - (transpositions / 2)) / matches)
@@ -108,7 +113,7 @@ public struct Jaro {
           prefixDistance < maxPrefix {
       source.formIndex(after: &sourceStart)
       destination.formIndex(after: &destinationStart)
-      prefixDistance += 1
+      prefixDistance &+= 1
     }
     return jaro + (scaling * Double(prefixDistance) * (1 - jaro))
   }
