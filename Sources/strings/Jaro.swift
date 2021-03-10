@@ -25,44 +25,61 @@ public struct Jaro {
     let matchDistance = (max(source.count, destination.count) / 2) - 1
     var sourceMatches = ContiguousArray(repeating: false, count: source.count)
     var targetMatches = ContiguousArray(repeating: false, count: destination.count)
-    var matches = 0.0
-    var transpositions = 0.0
     
-    for i in 0..<source.count {
-      let start = max(0, i - matchDistance)
-      let end = min(i + matchDistance + 1, destination.count)
-      
-      if end < start {
-        break
-      }
-      
-      for j in start..<end where !targetMatches[j] {
-        let iIdx = source.index(source.startIndex, offsetBy: i)
-        let jIdx = destination.index(destination.startIndex, offsetBy: j)
-        if source[iIdx] != destination[jIdx] {
-          continue
+    let matches = sourceMatches.withUnsafeMutableBufferPointer { (sourceMatchesBuffer) in
+      targetMatches.withUnsafeMutableBufferPointer { (targetMatchesBuffer) -> Double in
+        var matchCount = 0
+        var iIdx = source.startIndex
+        for i in 0..<source.count {
+          let start = max(0, i - matchDistance)
+          let end = min(i &+ matchDistance &+ 1, destination.count)
+          
+          if end < start {
+            break
+          }
+          
+          var jIdx = destination.index(destination.startIndex, offsetBy: start)
+          for j in start..<end {
+            if targetMatchesBuffer[j] || source[iIdx] != destination[jIdx] {
+              destination.formIndex(after: &jIdx)
+              continue
+            }
+            sourceMatchesBuffer[i] = true
+            targetMatchesBuffer[j] = true
+            matchCount &+= 1
+            break
+          }
+          source.formIndex(after: &iIdx)
         }
-        sourceMatches[i] = true
-        targetMatches[j] = true
-        matches += 1
-        break
+        return Double(matchCount)
       }
     }
-
+  
     guard matches != 0 else { return 0 }
     
+    var transpositions = 0.0
     var k = 0
-    for i in 0..<source.count where sourceMatches[i] {
+    var iIdx = source.startIndex
+    var kIdx = destination.startIndex
+    for i in 0..<source.count {
+      defer {
+        source.formIndex(after: &iIdx)
+      }
+
+      if !sourceMatches[i] {
+        continue
+      }
+
       while !targetMatches[k] {
-        k += 1
+        k &+= 1
+        destination.formIndex(after: &kIdx)
       }
       
-      let iIdx = source.index(source.startIndex, offsetBy: i)
-      let kIdx = destination.index(destination.startIndex, offsetBy: k)
       if source[iIdx] != destination[kIdx] {
         transpositions += 1
       }
-      k += 1
+      k &+= 1
+      destination.formIndex(after: &kIdx)
     }
     
     let sourceRatio = matches / Double(source.count)
