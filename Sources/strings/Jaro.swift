@@ -95,6 +95,8 @@ public struct Jaro {
 
   }
   
+  @inlinable
+  @_specialize(where S == String)
   public func winklerDistance<S: StringProtocol>(
     to destination: S, scaling: Double) -> Double {
     let jaro = distance(to: destination)
