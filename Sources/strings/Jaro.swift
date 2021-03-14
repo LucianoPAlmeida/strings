@@ -4,18 +4,19 @@
 //
 //  Created by Luciano Almeida on 12/02/21.
 //
+//===----------------------------------------------------------------------===//
 
-@frozen
-public struct Jaro {
-  public let source: String
+public struct Jaro<Source: StringProtocol> {
+  @usableFromInline
+  internal let source: Source
   
   @inlinable
-  public init(_ source: String) {
+  public init(_ source: Source) {
     self.source = source
   }
   
   @inlinable
-  @_specialize(where S == String)
+  @_specialize(where S == String, Source == String)
   public func distance<S: StringProtocol>(to destination: S) -> Double {
     // Both strings are empty.
     guard !source.isEmpty || !destination.isEmpty else { return 1 }
@@ -96,7 +97,7 @@ public struct Jaro {
   }
   
   @inlinable
-  @_specialize(where S == String)
+  @_specialize(where S == String, Source == String)
   public func winklerDistance<S: StringProtocol>(
     to destination: S, scaling: Double) -> Double {
     let jaro = distance(to: destination)
@@ -121,15 +122,15 @@ public struct Jaro {
   }
 }
 
-public extension String {
+public extension StringProtocol {
   @inlinable
-  @_specialize(where S == String)
+  @_specialize(where S == String, Self == String)
   func jaroDistance<S: StringProtocol>(to destination: S) -> Double {
     return Jaro(self).distance(to: destination)
   }
   
   @inlinable
-  @_specialize(where S == String)
+  @_specialize(where S == String, Self == String)
   func jaroWinklerDistance<S: StringProtocol>(
     to destination: S, scaling: Double = 0.1) -> Double {
     return Jaro(self).winklerDistance(to: destination, scaling: scaling)

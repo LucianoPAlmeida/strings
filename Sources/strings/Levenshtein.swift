@@ -5,17 +5,17 @@
 //
 //===----------------------------------------------------------------------===//
 
-@frozen
-public struct Levenshtein {
-  public let source: String
+public struct Levenshtein<Source: StringProtocol> {
+  @usableFromInline
+  internal let source: Source
   
   @inlinable
-  public init(_ source: String) {
+  public init(_ source: Source) {
     self.source = source
   }
   
   @inlinable
-  @_specialize(where S == String)
+  @_specialize(where S == String, Source == String)
   func distance<S: StringProtocol>(to destination: S) -> Int {
     var sourceStartTrim = source.startIndex
     var destinatioStartTrim = destination.startIndex
@@ -105,9 +105,9 @@ public struct Levenshtein {
   }
 }
 
-public extension String {
+public extension StringProtocol {
   @inlinable
-  @_specialize(where S == String)
+  @_specialize(where S == String, Self == String)
   func levenshteinDistance<S: StringProtocol>(to destination: S) -> Int {
     return Levenshtein(self).distance(to: destination)
   }
