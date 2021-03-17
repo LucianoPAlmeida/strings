@@ -62,4 +62,14 @@ benchmark("Jaro distance random super large string", settings: Iterations(5)) {
   let _ = longString1.jaroDistance(to: longString2)
 }
 
+//===----------------------------------------------------------------------===//
+// Benchmarks for Hamming
+//===----------------------------------------------------------------------===//
+benchmark("Hamming distance", settings: Iterations(500)) {
+  let s1 = "djaslkdjakldjsakldjaskljdaklsjdklasjdlkasjdlkasjdklsajdlkasjdklasjdlkjsakld"
+  let s2 = "ej;kqwejwklqiwoqpieopwieopwqieopwqiecjsdk;lajkljsalkd;adkajskldjsklajdakls;"
+
+  let _ = s1.hammingDistance(to: s2)
+}
+
 Benchmark.main()

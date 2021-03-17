@@ -40,5 +40,10 @@ Given that we don't have the whole matrix, the iteration is done by at the end o
 * Reference: 
     * https://www.geeksforgeeks.org/jaro-and-jaro-winkler-similarity/
 
+## Hamming
+
+* The Hamming distance between two strings of equal length is the count of positions in which the caracter is different in the 
+between the two.
+
 ## Others
 * Implement other algorithms e.g. Hamming distance and Damerau–Levenshtein(differs from the Levenshtein by including also transponsitions on the calculation in addition to the insertion, substitution and deletion).
