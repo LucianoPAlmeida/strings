@@ -25,14 +25,14 @@ public struct Jaro<Source: StringProtocol> {
     
     let matchDistance = (max(source.count, destination.count) / 2) - 1
     var sourceMatches = ContiguousArray(repeating: false, count: source.count)
-    var targetMatches = ContiguousArray(repeating: false, count: destination.count)
+    var destinationMatches = ContiguousArray(repeating: false, count: destination.count)
     
-    let matches = sourceMatches.withUnsafeMutableBufferPointer { (sourceMatchesBuffer) in
-      targetMatches.withUnsafeMutableBufferPointer { (targetMatchesBuffer) -> Double in
+    let matches = sourceMatches.withUnsafeMutableBufferPointer { sourceMatchesBuffer in
+      destinationMatches.withUnsafeMutableBufferPointer { destinationMatchesBuffer -> Double in
         var matchCount = 0
         var iIdx = source.startIndex
         for i in 0..<source.count {
-          let start = max(0, i - matchDistance)
+          let start = max(0, i &- matchDistance)
           let end = min(i &+ matchDistance &+ 1, destination.count)
           
           if end < start {
@@ -41,12 +41,12 @@ public struct Jaro<Source: StringProtocol> {
           
           var jIdx = destination.index(destination.startIndex, offsetBy: start)
           for j in start..<end {
-            if targetMatchesBuffer[j] || source[iIdx] != destination[jIdx] {
+            if destinationMatchesBuffer[j] || source[iIdx] != destination[jIdx] {
               destination.formIndex(after: &jIdx)
               continue
             }
             sourceMatchesBuffer[i] = true
-            targetMatchesBuffer[j] = true
+            destinationMatchesBuffer[j] = true
             matchCount &+= 1
             break
           }
@@ -58,8 +58,8 @@ public struct Jaro<Source: StringProtocol> {
   
     guard matches != 0 else { return 0 }
     
-    let transpositions = sourceMatches.withUnsafeMutableBufferPointer { (sourceMatchesBuffer) in
-      targetMatches.withUnsafeMutableBufferPointer { (targetMatchesBuffer) -> Double in
+    let transpositions = sourceMatches.withUnsafeMutableBufferPointer { sourceMatchesBuffer in
+      destinationMatches.withUnsafeMutableBufferPointer { destinationMatchesBuffer -> Double in
         var k = 0
         var transpositionsCount = 0
         var iIdx = source.startIndex
@@ -73,7 +73,7 @@ public struct Jaro<Source: StringProtocol> {
             continue
           }
 
-          while !targetMatchesBuffer[k] {
+          while !destinationMatchesBuffer[k] {
             k &+= 1
             destination.formIndex(after: &kIdx)
           }
