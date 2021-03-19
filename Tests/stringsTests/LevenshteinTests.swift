@@ -6,7 +6,6 @@
 //  Created by Luciano Almeida on 15/12/20.
 //
 import XCTest
-
 import strings
 
 final class LevenshteinTests: XCTestCase {

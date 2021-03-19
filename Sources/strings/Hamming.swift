@@ -37,6 +37,8 @@ public struct Hamming<Source: StringProtocol> {
 }
 
 public extension StringProtocol {
+  @inlinable
+  @_specialize(where S == String, Self == String)
   func hammingDistance<S: StringProtocol>(to destination: S) -> Int {
     precondition(count == destination.count,
                  "Hamming string distance requires strings of equal lenghts")
