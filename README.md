@@ -46,4 +46,4 @@ Given that we don't have the whole matrix, the iteration is done by at the end o
 between the two.
 
 ## Others
-* Implement other algorithms e.g. Hamming distance and Damerau–Levenshtein(differs from the Levenshtein by including also transponsitions on the calculation in addition to the insertion, substitution and deletion).
+* Implement other algorithms e.g. Damerau–Levenshtein(differs from the Levenshtein by including also transponsitions on the calculation in addition to the insertion, substitution and deletion).
