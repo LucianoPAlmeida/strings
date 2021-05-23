@@ -19,10 +19,8 @@ public struct Hamming<Source: StringProtocol> {
   @inline(__always)
   internal func _distance<S: StringProtocol>(to destination: S) -> Int {
     var distance: Int = 0
-    for (lhs, rhs) in zip(source, destination) {
-      if lhs != rhs {
-        distance &+= 1
-      }
+    for (lhs, rhs) in zip(source, destination) where lhs != rhs {
+      distance &+= 1
     }
     return distance
   }
