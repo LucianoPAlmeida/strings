@@ -27,73 +27,65 @@ public struct Jaro<Source: StringProtocol> {
     var sourceMatches = ContiguousArray(repeating: false, count: source.count)
     var destinationMatches = ContiguousArray(repeating: false, count: destination.count)
     
-    let matches = sourceMatches.withUnsafeMutableBufferPointer { sourceMatchesBuffer in
-      destinationMatches.withUnsafeMutableBufferPointer { destinationMatchesBuffer -> Double in
-        var matchCount = 0
-        var iIdx = source.startIndex
-        for i in 0..<source.count {
-          let start = max(0, i &- matchDistance)
-          let end = min(i &+ matchDistance &+ 1, destination.count)
-          
-          if end < start {
-            break
-          }
-          
-          var jIdx = destination.index(destination.startIndex, offsetBy: start)
-          for j in start..<end {
-            if destinationMatchesBuffer[j] || source[iIdx] != destination[jIdx] {
-              destination.formIndex(after: &jIdx)
-              continue
-            }
-            sourceMatchesBuffer[i] = true
-            destinationMatchesBuffer[j] = true
-            matchCount &+= 1
-            break
-          }
-          source.formIndex(after: &iIdx)
-        }
-        return Double(matchCount)
+    var matchesCount = 0
+    var iIdx = source.startIndex
+    for i in 0..<source.count {
+      let start = max(0, i &- matchDistance)
+      let end = min(i &+ matchDistance &+ 1, destination.count)
+      
+      if end < start {
+        break
       }
+      
+      var jIdx = destination.index(destination.startIndex, offsetBy: start)
+      for j in start..<end {
+        if destinationMatches[j] || source[iIdx] != destination[jIdx] {
+          destination.formIndex(after: &jIdx)
+          continue
+        }
+        sourceMatches[i] = true
+        destinationMatches[j] = true
+        matchesCount &+= 1
+        break
+      }
+      source.formIndex(after: &iIdx)
     }
   
-    guard matches != 0 else { return 0 }
+    guard matchesCount != 0 else { return 0 }
     
-    let transpositions = sourceMatches.withUnsafeMutableBufferPointer { sourceMatchesBuffer in
-      destinationMatches.withUnsafeMutableBufferPointer { destinationMatchesBuffer -> Double in
-        var k = 0
-        var transpositionsCount = 0
-        var iIdx = source.startIndex
-        var kIdx = destination.startIndex
-        for i in 0..<source.count {
-          defer {
-            source.formIndex(after: &iIdx)
-          }
-
-          if !sourceMatchesBuffer[i] {
-            continue
-          }
-
-          while !destinationMatchesBuffer[k] {
-            k &+= 1
-            destination.formIndex(after: &kIdx)
-          }
-          
-          if source[iIdx] != destination[kIdx] {
-            transpositionsCount &+= 1
-          }
-          k &+= 1
-          destination.formIndex(after: &kIdx)
-        }
-        return Double(transpositionsCount)
+    var k = 0
+    var transpositionsCount = 0
+    iIdx = source.startIndex
+    var kIdx = destination.startIndex
+    for i in 0..<source.count {
+      defer {
+        source.formIndex(after: &iIdx)
       }
+      
+      if !sourceMatches[i] {
+        continue
+      }
+      
+      while !destinationMatches[k] {
+        k &+= 1
+        destination.formIndex(after: &kIdx)
+      }
+      
+      if source[iIdx] != destination[kIdx] {
+        transpositionsCount &+= 1
+      }
+      k &+= 1
+      destination.formIndex(after: &kIdx)
     }
-
+    
+    let matches = Double(matchesCount)
+    let transpositions = Double(transpositionsCount)
+    
     let sourceRatio = matches / Double(source.count)
     let targetRatio = matches / Double(destination.count)
     let transpositionRatio = ((matches - (transpositions / 2)) / matches)
     
     return (sourceRatio + targetRatio + transpositionRatio) / 3.0
-
   }
   
   @inlinable

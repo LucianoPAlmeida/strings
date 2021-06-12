@@ -66,42 +66,34 @@ public struct Levenshtein<Source: StringProtocol> {
     
     // Initialize the levenshtein matrix with only two rows
     // current and previous.
-    var previousRow = ContiguousArray<Int>(0...n)
-    var currentRow = ContiguousArray<Int>(repeating: 0, count: n &+ 1)
-  
-    return previousRow.withUnsafeMutableBufferPointer { previousBuffer in
-      currentRow.withUnsafeMutableBufferPointer { currentBuffer in
-        // Make mutable vars it able to swap and reuse rows.
-        var current = previousBuffer
-        var previous = currentBuffer
-        
-        var sourceIdx = newSource.startIndex
-        for i in 1...m {
-          swap(&previous, &current)
-          current[0] = i
+    var previousRow = ContiguousArray<Int>(repeating: 0, count: n + 1)
+    var currentRow = ContiguousArray<Int>(0...n)
 
-          var destinationIdx = newDestination.startIndex
-          for j in 1...n {
-            // If characteres are equal for the levenshtein algorithm the
-            // minimum will always be the substitution cost, so we can fast
-            // path here in order to avoid min calls.
-            if newSource[sourceIdx] == newDestination[destinationIdx] {
-              current[j] = previous[j &- 1]
-            } else {
-              let deletion = previous[j]
-              let insertion = current[j &- 1]
-              let substitution = previous[j &- 1]
-              current[j] = min(deletion, min(insertion, substitution)) &+ 1
-            }
-            // j += 1
-            newDestination.formIndex(after: &destinationIdx)
-          }
-          // i += 1
-          newSource.formIndex(after: &sourceIdx)
+    var sourceIdx = newSource.startIndex
+    for i in 1...m {
+      swap(&previousRow, &currentRow)
+      currentRow[0] = i
+      
+      var destinationIdx = newDestination.startIndex
+      for j in 1...n {
+        // If characteres are equal for the levenshtein algorithm the
+        // minimum will always be the substitution cost, so we can fast
+        // path here in order to avoid min calls.
+        if newSource[sourceIdx] == newDestination[destinationIdx] {
+          currentRow[j] = previousRow[j &- 1]
+        } else {
+          let deletion = previousRow[j]
+          let insertion = currentRow[j &- 1]
+          let substitution = previousRow[j &- 1]
+          currentRow[j] = min(deletion, min(insertion, substitution)) &+ 1
         }
-        return current[n]
+        // j += 1
+        newDestination.formIndex(after: &destinationIdx)
       }
+      // i += 1
+      newSource.formIndex(after: &sourceIdx)
     }
+    return currentRow[n]
   }
 }
 
