@@ -1,9 +1,17 @@
 # strings
 
-Just playing around with strings...
-A collection of string algorithms implemented in order to learn a bit more about them.
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
+[![Swift](https://img.shields.io/badge/Swift-5.4-orange.svg)](https://swift.org)
+[![Xcode](https://img.shields.io/badge/Xcode-12.5-blue.svg)](https://developer.apple.com/xcode)
+[![SPM](https://img.shields.io/badge/SPM-orange.svg)](https://swift.org/package-manager/)
 
-## Levenshtein 
+Just playing around with strings...
+It started as a collection of string algorithms implemented in order to learn a bit more about them.
+
+Making it a package so people can import if they find useful.
+
+## Algorithms Available
+### Levenshtein 
 
 An implementation of `Levenshtein` distance algorithm with a few algorithms and swift optimization.
 Step by step:
@@ -12,7 +20,7 @@ Step by step:
 
 * Early exit for empty cases.
 
-* Allocate two rows (current and previous) which at the initial stage of the algorithm is first and second row initialized accordingly the first row is `0...destination.count` and second row is `1` at initial position and all zeros. Note that the [original algorithm pseudo code](https://en.wikipedia.org/wiki/Levenshtein_distance) describes a matrix `source.count` x `destination.count` but since though the algorithm iterations it only operates in terms of the current row and the previous a size allocation optimization can be done.
+* Allocate two rows (current and previous) which at the initial stage of the algorithm is first and second row initialized accordingly the first row is `0...destination.count` and second row is `1` at initial position and all zeros. Note that the [original algorithm pseudo code](https://en.wikipedia.org/wiki/Levenshtein_distance) describes a matrix `source.count` x `destination.count` but since through the algorithm iterations it only operates in terms of the current and the previous rows a size allocation optimization can be done.
 
 * Iterate through "all the rows" calculating the minimum of insertion, deletion and substitution + 1. 
 Pseudo code:
@@ -35,15 +43,66 @@ Given that we don't have the whole matrix, the iteration is done by at the end o
 * Reference: 
     * https://en.wikipedia.org/wiki/Levenshtein_distance
 
-## Jaro and Jaro-Winkler
+### Jaro and Jaro-Winkler
 
 * Reference: 
     * https://www.geeksforgeeks.org/jaro-and-jaro-winkler-similarity/
 
-## Hamming
+### Hamming
 
 * The Hamming distance between two strings of equal length is the count of positions in which the caracter is different in the 
 between the two.
 
-## Others
+### TODO
 * Implement other algorithms e.g. Damerau–Levenshtein(differs from the Levenshtein by including also transponsitions on the calculation in addition to the insertion, substitution and deletion).
+
+## Usage
+
+Is very simple to use...
+
+```swift
+import strings
+
+"friend".levenshteinDistance(to: "fresh") // 3
+"adlsajdlsa".jaroDistance(to: "asv") // ~= 0.6222
+"friend".hammingDistance(to: "frinnd") // 1
+```
+
+## Instalation
+
+You can use The Swift Package Manager to install by adding the proper description to your `Package.swift`
+```swift
+import PackageDescription
+
+let package = Package(
+    name: "YOUR_PROJECT_NAME",
+    targets: [],
+    dependencies: [
+        .package(url: "https://github.com/LucianoPAlmeida/strings.git", from: "0.0.1")
+    ]
+)
+```
+Then add the target as dependency
+
+```
+.target(
+    name: "YOUR_TARGET_NAME",
+    dependencies: [
+        "strings", ... 
+    ]
+),
+
+```
+
+Or you can manually just copy the implementations into your project.
+
+## Benchmarks 
+Benchmark was there to make us strive to the most performant implementation given the knowledge of the algorithms and of the swift language.
+
+## References 
+* [.NET Conf 2020 Maximising Algorithm Performance in .NET: Levenshtein Distance by James Turner](https://www.youtube.com/watch?v=JiOYajl2Mds)
+* https://en.wikipedia.org/wiki/Levenshtein_distance
+* https://www.geeksforgeeks.org/jaro-and-jaro-winkler-similarity/
+
+## Licence
+**strings** is released under the [MIT License](https://opensource.org/licenses/MIT).
