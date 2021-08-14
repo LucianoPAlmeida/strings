@@ -5,6 +5,20 @@
 //
 //===----------------------------------------------------------------------===//
 
+public struct LevenshteinCost {
+  public let insertion: Int
+  public let deletion: Int
+  public let substitution: Int
+
+  public init(insertion: Int = 1, deletion: Int = 1, substitution: Int = 1) {
+    self.insertion = insertion
+    self.deletion = deletion
+    self.substitution = substitution
+  }
+  
+  public static var `default`: LevenshteinCost { LevenshteinCost() }
+}
+
 public struct Levenshtein<Source: StringProtocol> {
   @usableFromInline
   internal let source: Source
@@ -16,7 +30,9 @@ public struct Levenshtein<Source: StringProtocol> {
   
   @inlinable
   @_specialize(where S == String, Source == String)
-  func distance<S: StringProtocol>(to destination: S) -> Int {
+  func distance<S>(to destination: S,
+                   cost: LevenshteinCost = .default) -> Int
+    where S: StringProtocol {
     var sourceStartTrim = source.startIndex
     var destinatioStartTrim = destination.startIndex
     while sourceStartTrim < source.endIndex &&
@@ -82,10 +98,10 @@ public struct Levenshtein<Source: StringProtocol> {
         if newSource[sourceIdx] == newDestination[destinationIdx] {
           currentRow[j] = previousRow[j &- 1]
         } else {
-          let deletion = previousRow[j]
-          let insertion = currentRow[j &- 1]
-          let substitution = previousRow[j &- 1]
-          currentRow[j] = min(deletion, min(insertion, substitution)) &+ 1
+          let deletion = previousRow[j] &+ cost.deletion
+          let insertion = currentRow[j &- 1] &+ cost.insertion
+          let substitution = previousRow[j &- 1] &+ cost.substitution
+          currentRow[j] = min(deletion, min(insertion, substitution))
         }
         // j += 1
         newDestination.formIndex(after: &destinationIdx)
@@ -100,7 +116,9 @@ public struct Levenshtein<Source: StringProtocol> {
 public extension StringProtocol {
   @inlinable
   @_specialize(where S == String, Self == String)
-  func levenshteinDistance<S: StringProtocol>(to destination: S) -> Int {
-    return Levenshtein(self).distance(to: destination)
+  func levenshteinDistance<S>(to destination: S,
+                              cost: LevenshteinCost = .default) -> Int
+    where S: StringProtocol {
+    return Levenshtein(self).distance(to: destination, cost: cost)
   }
 }
