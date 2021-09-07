@@ -28,6 +28,15 @@ final class LevenshteinTests: XCTestCase {
     XCTAssertEqual("friend".levenshteinDistance(to: "fried", cost: cost), 1)
     XCTAssertEqual("test".levenshteinDistance(to: "team", cost: cost), 4)
   }
+  
+  func testLevenshteinCost() {
+    let cost = LevenshteinCost.default
+    let expected = LevenshteinCost(insertion: 3, deletion: 4, substitution: 5)
+    
+    XCTAssertNotEqual(expected, cost)
+    XCTAssertEqual(expected, cost.with(deletion: 4).with(insertion: 3).with(substitution: 5))
+    
+  }
 
   static var allTests = [
     ("testLevenshteinDistances", testLevenshteinDistances),
