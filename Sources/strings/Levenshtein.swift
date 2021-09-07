@@ -5,10 +5,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-public struct LevenshteinCost {
-  public let insertion: Int
-  public let deletion: Int
-  public let substitution: Int
+public struct LevenshteinCost: Equatable {
+  public var insertion: Int
+  public var deletion: Int
+  public var substitution: Int
 
   public init(insertion: Int = 1, deletion: Int = 1, substitution: Int = 1) {
     self.insertion = insertion
@@ -17,6 +17,30 @@ public struct LevenshteinCost {
   }
   
   public static var `default`: LevenshteinCost { LevenshteinCost() }
+  
+  @inlinable
+  internal func _with(
+    _ property: WritableKeyPath<LevenshteinCost, Int>, value: Int
+  ) -> LevenshteinCost {
+    var copy = self
+    copy[keyPath: property] = value
+    return copy
+  }
+  
+  @inlinable
+  public func with(insertion: Int) -> LevenshteinCost {
+    return _with(\.insertion, value: insertion)
+  }
+  
+  @inlinable
+  public func with(deletion: Int) -> LevenshteinCost {
+    return _with(\.deletion, value: deletion)
+  }
+  
+  @inlinable
+  public func with(substitution: Int) -> LevenshteinCost {
+    return _with(\.substitution, value: substitution)
+  }
 }
 
 public struct Levenshtein<Source: StringProtocol> {
