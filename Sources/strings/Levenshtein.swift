@@ -19,6 +19,7 @@ public struct LevenshteinCost: Equatable {
   public static var `default`: LevenshteinCost { LevenshteinCost() }
   
   @inlinable
+  @inline(__always)
   internal func _with(
     _ property: WritableKeyPath<LevenshteinCost, Int>, value: Int
   ) -> LevenshteinCost {
@@ -43,6 +44,7 @@ public struct LevenshteinCost: Equatable {
   }
 }
 
+@frozen
 public struct Levenshtein<Source: StringProtocol> {
   @usableFromInline
   internal let source: Source

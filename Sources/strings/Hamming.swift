@@ -5,7 +5,7 @@
 //  Created by Luciano Almeida on 16/03/21.
 //
 //===----------------------------------------------------------------------===//
-
+@frozen
 public struct Hamming<Source: StringProtocol> {
   @usableFromInline
   internal let source: Source
@@ -29,7 +29,7 @@ public struct Hamming<Source: StringProtocol> {
   @_specialize(where S == String, Source == String)
   public func distance<S: StringProtocol>(to destination: S) -> Int {
     precondition(source.count == destination.count,
-                 "Hamming string distance requires strings of equal lenghts")
+                 "Hamming string distance requires strings of equal lengths")
     return _distance(to: destination)
   }
 }
@@ -39,7 +39,7 @@ public extension StringProtocol {
   @_specialize(where S == String, Self == String)
   func hammingDistance<S: StringProtocol>(to destination: S) -> Int {
     precondition(count == destination.count,
-                 "Hamming string distance requires strings of equal lenghts")
+                 "Hamming string distance requires strings of equal lengths")
     return Hamming(self)._distance(to: destination)
   }
 }

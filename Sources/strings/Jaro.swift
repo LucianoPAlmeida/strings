@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+@frozen
 public struct Jaro<Source: StringProtocol> {
   @usableFromInline
   internal let source: Source
