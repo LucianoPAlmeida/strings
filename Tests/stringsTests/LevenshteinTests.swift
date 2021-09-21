@@ -40,5 +40,6 @@ final class LevenshteinTests: XCTestCase {
 
   static var allTests = [
     ("testLevenshteinDistances", testLevenshteinDistances),
+    ("testLevenshteinCost", testLevenshteinCost)
   ]
 }
