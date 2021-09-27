@@ -24,10 +24,10 @@ public struct Jaro<Source: StringProtocol> {
     // One of the strings is empty.
     guard !source.isEmpty && !destination.isEmpty else { return 0 }
     
-    let matchDistance = (max(source.count, destination.count) / 2) - 1
-    var sourceMatches = ContiguousArray(repeating: false, count: source.count)
-    var destinationMatches = ContiguousArray(repeating: false, count: destination.count)
-    
+    let matchDistance = (max(source.count, destination.count) / 2) &- 1
+    var sourceMatches = BitStorage(count: source.count)
+    var destinationMatches = BitStorage(count: destination.count)
+
     var matchesCount = 0
     var iIdx = source.startIndex
     for i in 0..<source.count {

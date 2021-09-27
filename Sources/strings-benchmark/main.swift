@@ -51,7 +51,7 @@ benchmark("Jaro distance", settings: Iterations(500)) {
   let s1 = "djaslkdjakldjsakldjaskljdaklsjdklasjdlkasjdlkasjdklsajdlkasjdklasjdlkjsakld"
   let s2 = "ej;kqwejwklqiwoqpieopwieopwqieopwqiecjsdk;lajkljsalkd;adkajskldjsklajdakls;djl;dasjkldasljdklsa;ds"
 
-  let _ = s1.levenshteinDistance(to: s2)
+  let _ = s1.jaroDistance(to: s2)
 }
 
 benchmark("Jaro distance random large string", settings: Iterations(100)) {
