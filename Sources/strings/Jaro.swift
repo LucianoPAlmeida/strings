@@ -25,8 +25,8 @@ public struct Jaro<Source: StringProtocol> {
     guard !source.isEmpty && !destination.isEmpty else { return 0 }
     
     let matchDistance = (max(source.count, destination.count) / 2) &- 1
-    var sourceMatches = BitStorage(count: source.count)
-    var destinationMatches = BitStorage(count: destination.count)
+    var sourceMatches = FixedBitArray(count: source.count)
+    var destinationMatches = FixedBitArray(count: destination.count)
 
     var matchesCount = 0
     var iIdx = source.startIndex

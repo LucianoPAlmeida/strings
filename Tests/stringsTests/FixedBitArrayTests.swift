@@ -2,11 +2,11 @@
 import XCTest
 @testable import strings
 
-final class BitStorageTests: XCTestCase {
+final class FixedBitArrayTests: XCTestCase {
 
   func testDefaultValues() {
     let size = 10
-    let storage = BitStorage(count: size)
+    let storage = FixedBitArray(count: size)
     XCTAssertEqual(size, storage.count)
     
     for i in 0..<size {
@@ -22,7 +22,7 @@ final class BitStorageTests: XCTestCase {
   }
   
   func _modifyValuesTest(size: Int) {
-    var storage = BitStorage(count: size)
+    var storage = FixedBitArray(count: size)
     for i in 0..<size where  i % 2 == 0 {
       storage[i] = true
     }

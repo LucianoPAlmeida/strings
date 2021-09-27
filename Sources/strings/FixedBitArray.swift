@@ -1,5 +1,5 @@
 @usableFromInline
-internal struct BitStorage {
+internal struct FixedBitArray {
   @usableFromInline
   typealias WordStorage = Array<UInt>
   
