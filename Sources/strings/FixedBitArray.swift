@@ -13,6 +13,7 @@ internal struct FixedBitArray {
   internal let count: Int
   
   @inlinable
+  @inline(__always)
   internal init(count: Int) {
     let (div, remainder) = count.quotientAndRemainder(dividingBy: _bitsPerWord)
     self._words = WordStorage(repeating: 0, count: div &+ remainder.signum())
@@ -23,10 +24,12 @@ internal struct FixedBitArray {
   @inline(__always)
   internal subscript(_ idx: Int) -> Bool {
     get {
+      precondition(0..<count ~= idx, "Out of bounds index!")
       let (pos, posIdx) = idx.quotientAndRemainder(dividingBy: _bitsPerWord)
       return _words[pos] & (1 << posIdx) != 0
     }
     set {
+      precondition(0..<count ~= idx, "Out of bounds index!")
       let (pos, posIdx) = idx.quotientAndRemainder(dividingBy: _bitsPerWord)
       if newValue == true {
         _words[pos] |= (1 << posIdx)
