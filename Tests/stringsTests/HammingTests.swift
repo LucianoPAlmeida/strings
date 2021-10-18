@@ -16,4 +16,8 @@ final class HammingTests: XCTestCase {
     XCTAssertEqual("test".hammingDistance(to: "team"), 2)
     XCTAssertEqual("".hammingDistance(to: ""), 0)
   }
+
+  static var allTests = [
+    ("testHammingDistances", testHammingDistances)
+  ]
 }
