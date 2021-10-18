@@ -1,0 +1,27 @@
+name: Swift
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  Darwin:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test --parallel
+
+  Linux:
+    runs-on: [ubuntu-18.04] 
+    container: swift:5.3.3
+    steps:
+      - uses: actions/checkout@v1
+      - name: Linux
+        run: swift test --parallel
