@@ -112,7 +112,8 @@ public struct Levenshtein<Source: StringProtocol> {
     var currentRow = ContiguousArray<Int>(unsafeUninitializedCapacity: n + 1) {
         buffer, resultCount in
       for offset in 0...n {
-        let ref = buffer.baseAddress! + offset
+        var ref = buffer.baseAddress!
+        ref += offset
         ref.initialize(to: offset)
         resultCount &+= 1
       }
