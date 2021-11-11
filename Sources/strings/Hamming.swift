@@ -18,6 +18,8 @@ public struct Hamming<Source: StringProtocol> {
   @inlinable
   @inline(__always)
   internal func _distance<S: StringProtocol>(to destination: S) -> Int {
+    precondition(source.count == destination.count,
+                 "Hamming string distance requires strings of equal lengths")
     var distance: Int = 0
     for (lhs, rhs) in zip(source, destination) where lhs != rhs {
       distance &+= 1
@@ -28,18 +30,15 @@ public struct Hamming<Source: StringProtocol> {
   @inlinable
   @_specialize(where S == String, Source == String)
   public func distance<S: StringProtocol>(to destination: S) -> Int {
-    precondition(source.count == destination.count,
-                 "Hamming string distance requires strings of equal lengths")
     return _distance(to: destination)
   }
 }
 
 public extension StringProtocol {
   @inlinable
+  @inline(__always)
   @_specialize(where S == String, Self == String)
   func hammingDistance<S: StringProtocol>(to destination: S) -> Int {
-    precondition(count == destination.count,
-                 "Hamming string distance requires strings of equal lengths")
     return Hamming(self)._distance(to: destination)
   }
 }

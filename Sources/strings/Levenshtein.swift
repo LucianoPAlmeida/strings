@@ -149,6 +149,7 @@ public struct Levenshtein<Source: StringProtocol> {
 
 public extension StringProtocol {
   @inlinable
+  @inline(__always)
   @_specialize(where S == String, Self == String)
   func levenshteinDistance<S>(to destination: S,
                               cost: LevenshteinCost = .default) -> Int

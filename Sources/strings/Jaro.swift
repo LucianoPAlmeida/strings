@@ -117,12 +117,14 @@ public struct Jaro<Source: StringProtocol> {
 
 public extension StringProtocol {
   @inlinable
+  @inline(__always)
   @_specialize(where S == String, Self == String)
   func jaroDistance<S: StringProtocol>(to destination: S) -> Double {
     return Jaro(self).distance(to: destination)
   }
   
   @inlinable
+  @inline(__always)
   @_specialize(where S == String, Self == String)
   func jaroWinklerDistance<S: StringProtocol>(
     to destination: S, scaling: Double = 0.1) -> Double {
