@@ -1,0 +1,11 @@
+disabled_rules:
+  - closure_parameter_position
+  - identifier_name
+
+function_body_length:
+  warning: 80
+  error: 150
+
+cyclomatic_complexity:
+  warning: 12
+  error: 20

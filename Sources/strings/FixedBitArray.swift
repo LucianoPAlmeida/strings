@@ -1,18 +1,18 @@
 @usableFromInline
 internal struct FixedBitArray {
   @usableFromInline
-  typealias WordStorage = Array<UInt>
-  
+  typealias WordStorage = [UInt]
+
   // 64 on 64-bits systems, 32 on 32-bits systems
   @usableFromInline
   internal static let _bitsPerWord = UInt.bitWidth
-  
+
   @usableFromInline
   internal var _words: WordStorage
 
   @usableFromInline
   internal let count: Int
-  
+
   @inlinable
   @inline(__always)
   internal init(count: Int) {
@@ -20,7 +20,7 @@ internal struct FixedBitArray {
     self._words = WordStorage(repeating: 0, count: div &+ remainder.signum())
     self.count = count
   }
-  
+
   @inlinable
   @inline(__always)
   internal subscript(_ idx: Int) -> Bool {

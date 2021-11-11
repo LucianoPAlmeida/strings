@@ -4,12 +4,12 @@
 //
 //  Created by Luciano Almeida on 16/03/21.
 //
-//===----------------------------------------------------------------------===//
+// ===----------------------------------------------------------------------===//
 @frozen
 public struct Hamming<Source: StringProtocol> {
   @usableFromInline
   internal let source: Source
-  
+
   @inlinable
   public init(_ source: Source) {
     self.source = source
@@ -26,7 +26,7 @@ public struct Hamming<Source: StringProtocol> {
     }
     return distance
   }
-  
+
   @inlinable
   @_specialize(where S == String, Source == String)
   public func distance<S: StringProtocol>(to destination: S) -> Int {

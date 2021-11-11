@@ -3,7 +3,7 @@
 //
 //  Created by Luciano Almeida on 15/12/20.
 //
-//===----------------------------------------------------------------------===//
+// ===----------------------------------------------------------------------===//
 
 public struct LevenshteinCost: Equatable {
   public var insertion: Int
@@ -15,9 +15,9 @@ public struct LevenshteinCost: Equatable {
     self.deletion = deletion
     self.substitution = substitution
   }
-  
+
   public static var `default`: LevenshteinCost { LevenshteinCost() }
-  
+
   @inlinable
   @inline(__always)
   internal func _with(
@@ -27,17 +27,17 @@ public struct LevenshteinCost: Equatable {
     copy[keyPath: property] = value
     return copy
   }
-  
+
   @inlinable
   public func with(insertion: Int) -> LevenshteinCost {
     return _with(\.insertion, value: insertion)
   }
-  
+
   @inlinable
   public func with(deletion: Int) -> LevenshteinCost {
     return _with(\.deletion, value: deletion)
   }
-  
+
   @inlinable
   public func with(substitution: Int) -> LevenshteinCost {
     return _with(\.substitution, value: substitution)
@@ -48,12 +48,12 @@ public struct LevenshteinCost: Equatable {
 public struct Levenshtein<Source: StringProtocol> {
   @usableFromInline
   internal let source: Source
-  
+
   @inlinable
   public init(_ source: Source) {
     self.source = source
   }
-  
+
   @inlinable
   @_specialize(where S == String, Source == String)
   func distance<S>(to destination: S,
@@ -67,10 +67,10 @@ public struct Levenshtein<Source: StringProtocol> {
       source.formIndex(after: &sourceStartTrim)
       destination.formIndex(after: &destinatioStartTrim)
     }
-    
+
     var sourceEndTrim = source.endIndex
     var destinatioEndTrim = destination.endIndex
-    
+
     while sourceEndTrim > sourceStartTrim &&
           destinatioEndTrim > destinatioStartTrim {
       let sourceIdx = source.index(before: sourceEndTrim)
@@ -83,29 +83,29 @@ public struct Levenshtein<Source: StringProtocol> {
       source.formIndex(before: &sourceEndTrim)
       destination.formIndex(before: &destinatioEndTrim)
     }
-    
+
     // Equal strings
     guard sourceStartTrim != source.endIndex ||
           destinatioStartTrim != destination.endIndex else {
       return 0
     }
-    
+
     guard sourceStartTrim < sourceEndTrim else {
       return destination.distance(from: destinatioStartTrim,
                                   to: destinatioEndTrim)
     }
-    
+
     guard destinatioStartTrim < destinatioEndTrim else {
       return source.distance(from: sourceStartTrim,
                              to: sourceEndTrim)
     }
-    
+
     let newSource = source[sourceStartTrim..<sourceEndTrim]
     let newDestination = destination[destinatioStartTrim..<destinatioEndTrim]
 
     let m = newSource.count
     let n = newDestination.count
-    
+
     // Initialize the levenshtein matrix with only two rows
     // current and previous.
     var previousRow = ContiguousArray<Int>(repeating: 0, count: n + 1)
@@ -123,7 +123,7 @@ public struct Levenshtein<Source: StringProtocol> {
     for i in 1...m {
       swap(&previousRow, &currentRow)
       currentRow[0] = i
-      
+
       var destinationIdx = newDestination.startIndex
       for j in 1...n {
         // If characteres are equal for the levenshtein algorithm the
