@@ -4,7 +4,7 @@
 //  Created by Luciano Almeida on 15/12/20.
 //
 // ===----------------------------------------------------------------------===//
-
+@frozen
 public struct LevenshteinCost: Equatable {
   public var insertion: Int
   public var deletion: Int
@@ -85,8 +85,8 @@ public struct Levenshtein<Source: StringProtocol> {
     }
 
     // Equal strings
-    guard sourceStartTrim != source.endIndex ||
-          destinatioStartTrim != destination.endIndex else {
+    guard !(sourceStartTrim == source.endIndex &&
+          destinatioStartTrim == destination.endIndex) else {
       return 0
     }
 
@@ -108,8 +108,8 @@ public struct Levenshtein<Source: StringProtocol> {
 
     // Initialize the levenshtein matrix with only two rows
     // current and previous.
-    var previousRow = ContiguousArray<Int>(repeating: 0, count: n + 1)
-    var currentRow = ContiguousArray<Int>(unsafeUninitializedCapacity: n + 1) {
+    var previousRow = [Int](repeating: 0, count: n &+ 1)
+    var currentRow = [Int](unsafeUninitializedCapacity: n &+ 1) {
         buffer, resultCount in
       for offset in 0...n {
         var ref = buffer.baseAddress!

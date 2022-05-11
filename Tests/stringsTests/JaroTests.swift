@@ -21,7 +21,7 @@ final class JaroTests: XCTestCase {
     XCTAssertEqual(0.6222, "adlsajdlsa".jaroDistance(to: "asv"), accuracy: 0.0001)
     XCTAssertEqual(0.822222, "DwAyNE".jaroDistance(to: "DuANE"), accuracy: 0.0001)
   }
-  
+
   func testJaroWinklerDistances() {
     XCTAssertEqual(0.760, "friend".jaroWinklerDistance(to: "fresh"), accuracy: 0.0001)
     XCTAssertEqual(1, "friend".jaroWinklerDistance(to: "friend"), accuracy: 0.0001)
@@ -33,13 +33,13 @@ final class JaroTests: XCTestCase {
     XCTAssertEqual(0.6222, "adlsajdlsa".jaroWinklerDistance(to: "asv"), accuracy: 0.0001)
     XCTAssertEqual(0.840, "DwAyNE".jaroWinklerDistance(to: "DuANE"), accuracy: 0.0001)
     XCTAssertEqual(0.906667, "TRATE".jaroWinklerDistance(to: "TRACE"), accuracy: 0.0001)
-    
+
     // Scaling
     XCTAssertEqual(0.9466, "TRATE".jaroWinklerDistance(to: "TRACE", scaling: 0.2), accuracy: 0.0001)
   }
 
   static var allTests = [
     ("testJaroDistances", testJaroDistances),
-    ("testJaroWinklerDistances", testJaroWinklerDistances),
+    ("testJaroWinklerDistances", testJaroWinklerDistances)
   ]
 }

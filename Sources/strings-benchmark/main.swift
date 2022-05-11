@@ -39,7 +39,7 @@ benchmark("Levenshtein distance random large string", settings: Iterations(100))
 let longString1 = random(ofLength: 5_000)
 let longString2 = random(ofLength: 6_000)
 
-benchmark("Levenshtein distance random super large string", settings: Iterations(1)) {
+benchmark("Levenshtein distance random super large string", settings: Iterations(5)) {
   _ = longString1.levenshteinDistance(to: longString2)
 }
 

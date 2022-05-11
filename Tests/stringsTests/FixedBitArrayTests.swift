@@ -1,4 +1,3 @@
-
 import XCTest
 @testable import strings
 
@@ -8,19 +7,19 @@ final class FixedBitArrayTests: XCTestCase {
     let size = 10
     let storage = FixedBitArray(count: size)
     XCTAssertEqual(size, storage.count)
-    
+
     for i in 0..<size {
       XCTAssertFalse(storage[i])
     }
   }
-  
+
   func testModifyValues() {
     _modifyValuesTest(size: 10)
     _modifyValuesTest(size: 64)
     _modifyValuesTest(size: 1024)
     _modifyValuesTest(size: 1030)
   }
-  
+
   func _modifyValuesTest(size: Int) {
     var storage = FixedBitArray(count: size)
     for i in 0..<size where  i % 2 == 0 {
@@ -34,7 +33,7 @@ final class FixedBitArrayTests: XCTestCase {
         XCTAssertFalse(storage[i])
       }
     }
-    
+
     for i in 0..<size where i % 2 == 0 {
       storage[i] = false
     }
