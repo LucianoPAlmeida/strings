@@ -4,45 +4,6 @@
 //  Created by Luciano Almeida on 15/12/20.
 //
 // ===----------------------------------------------------------------------===//
-@frozen
-public struct LevenshteinCost: Equatable {
-  public var insertion: Int
-  public var deletion: Int
-  public var substitution: Int
-
-  public init(insertion: Int = 1, deletion: Int = 1, substitution: Int = 1) {
-    self.insertion = insertion
-    self.deletion = deletion
-    self.substitution = substitution
-  }
-
-  public static var `default`: LevenshteinCost { LevenshteinCost() }
-
-  @inlinable
-  @inline(__always)
-  internal func _with(
-    _ property: WritableKeyPath<LevenshteinCost, Int>, value: Int
-  ) -> LevenshteinCost {
-    var copy = self
-    copy[keyPath: property] = value
-    return copy
-  }
-
-  @inlinable
-  public func with(insertion: Int) -> LevenshteinCost {
-    return _with(\.insertion, value: insertion)
-  }
-
-  @inlinable
-  public func with(deletion: Int) -> LevenshteinCost {
-    return _with(\.deletion, value: deletion)
-  }
-
-  @inlinable
-  public func with(substitution: Int) -> LevenshteinCost {
-    return _with(\.substitution, value: substitution)
-  }
-}
 
 @frozen
 public struct Levenshtein<Source: StringProtocol> {
@@ -56,9 +17,13 @@ public struct Levenshtein<Source: StringProtocol> {
 
   @inlinable
   @_specialize(where S == String, Source == String)
-  func distance<S>(to destination: S,
-                   cost: LevenshteinCost = .default) -> Int
+  func distance<S>(to destination: S) -> Int
     where S: StringProtocol {
+
+    guard !source.isEmpty && !destination.isEmpty else {
+      return Swift.max(source.count, destination.count)
+    }
+
     var sourceStartTrim = source.startIndex
     var destinatioStartTrim = destination.startIndex
     while sourceStartTrim < source.endIndex &&
@@ -132,10 +97,10 @@ public struct Levenshtein<Source: StringProtocol> {
         if newSource[sourceIdx] == newDestination[destinationIdx] {
           currentRow[j] = previousRow[j &- 1]
         } else {
-          let deletion = previousRow[j] &+ cost.deletion
-          let insertion = currentRow[j &- 1] &+ cost.insertion
-          let substitution = previousRow[j &- 1] &+ cost.substitution
-          currentRow[j] = min(deletion, min(insertion, substitution))
+          let deletion = previousRow[j]
+          let insertion = currentRow[j &- 1]
+          let substitution = previousRow[j &- 1]
+          currentRow[j] = min(deletion, min(insertion, substitution)) &+ 1
         }
         // j += 1
         newDestination.formIndex(after: &destinationIdx)
@@ -151,9 +116,8 @@ public extension StringProtocol {
   @inlinable
   @inline(__always)
   @_specialize(where S == String, Self == String)
-  func levenshteinDistance<S>(to destination: S,
-                              cost: LevenshteinCost = .default) -> Int
+  func levenshteinDistance<S>(to destination: S) -> Int
     where S: StringProtocol {
-    return Levenshtein(self).distance(to: destination, cost: cost)
+    return Levenshtein(self).distance(to: destination)
   }
 }
