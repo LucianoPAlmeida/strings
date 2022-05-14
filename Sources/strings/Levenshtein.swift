@@ -34,39 +34,39 @@ public struct Levenshtein<Source: StringProtocol> {
     }
 
     var sourceEndTrim = source.endIndex
-    var destinatioEndTrim = destination.endIndex
+    var destinationEndTrim = destination.endIndex
 
     while sourceEndTrim > sourceStartTrim &&
-          destinatioEndTrim > destinatioStartTrim {
+          destinationEndTrim > destinatioStartTrim {
       let sourceIdx = source.index(before: sourceEndTrim)
-      let destinationIdx = source.index(before: destinatioEndTrim)
+      let destinationIdx = destination.index(before: destinationEndTrim)
 
       guard source[sourceIdx] == destination[destinationIdx] else {
         break
       }
 
-      source.formIndex(before: &sourceEndTrim)
-      destination.formIndex(before: &destinatioEndTrim)
+      sourceEndTrim = sourceIdx
+      destinationEndTrim = destinationIdx
     }
 
     // Equal strings
     guard !(sourceStartTrim == source.endIndex &&
-          destinatioStartTrim == destination.endIndex) else {
+            destinatioStartTrim == destination.endIndex) else {
       return 0
     }
 
     guard sourceStartTrim < sourceEndTrim else {
       return destination.distance(from: destinatioStartTrim,
-                                  to: destinatioEndTrim)
+                                  to: destinationEndTrim)
     }
 
-    guard destinatioStartTrim < destinatioEndTrim else {
+    guard destinatioStartTrim < destinationEndTrim else {
       return source.distance(from: sourceStartTrim,
                              to: sourceEndTrim)
     }
 
     let newSource = source[sourceStartTrim..<sourceEndTrim]
-    let newDestination = destination[destinatioStartTrim..<destinatioEndTrim]
+    let newDestination = destination[destinatioStartTrim..<destinationEndTrim]
 
     let m = newSource.count
     let n = newDestination.count
