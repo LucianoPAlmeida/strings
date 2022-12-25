@@ -74,15 +74,7 @@ public struct Levenshtein<Source: StringProtocol> {
     // Initialize the levenshtein matrix with only two rows
     // current and previous.
     var previousRow = [Int](repeating: 0, count: n &+ 1)
-    var currentRow = [Int](unsafeUninitializedCapacity: n &+ 1) {
-        buffer, resultCount in
-      for offset in 0...n {
-        var ref = buffer.baseAddress!
-        ref += offset
-        ref.initialize(to: offset)
-        resultCount &+= 1
-      }
-    }
+    var currentRow = [Int](0..<(n &+ 1))
 
     var sourceIdx = newSource.startIndex
     for i in 1...m {

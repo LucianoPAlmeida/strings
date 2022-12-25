@@ -1,3 +1,5 @@
+import Darwin
+
 @usableFromInline
 internal struct FixedBitArray {
   @usableFromInline
@@ -27,15 +29,17 @@ internal struct FixedBitArray {
     get {
       assert(0..<count ~= idx, "Out of bounds index!")
       let (pos, posIdx) = idx.quotientAndRemainder(dividingBy: FixedBitArray._bitsPerWord)
-      return _words[pos] & (1 << posIdx) != 0
+      return _words.withUnsafeBufferPointer{ $0[pos] } & (1 << posIdx) != 0
     }
     set {
       assert(0..<count ~= idx, "Out of bounds index!")
       let (pos, posIdx) = idx.quotientAndRemainder(dividingBy: FixedBitArray._bitsPerWord)
-      if newValue == true {
-        _words[pos] |= (1 << posIdx)
-      } else {
-        _words[pos] &= ~(1 << posIdx)
+      _words.withUnsafeMutableBufferPointer {
+        if newValue == true {
+          $0[pos] |= (1 << posIdx)
+        } else {
+          $0[pos] &= ~(1 << posIdx)
+        }
       }
     }
   }
