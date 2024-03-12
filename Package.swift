@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -17,7 +17,7 @@ let package = Package(
   dependencies: [
     // Dependencies declare other packages that this package depends on.
     // .package(url: /* package url */, from: "1.0.0"),
-    .package(name: "Benchmark", url: "https://github.com/google/swift-benchmark", from: "0.1.1")
+    .package(url: "https://github.com/google/swift-benchmark", from: "0.1.2")
   ],
   targets: [
     // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -25,9 +25,9 @@ let package = Package(
     .target(
       name: "strings",
       dependencies: []),
-    .target(
+    .executableTarget(
       name: "strings-benchmark",
-      dependencies: ["strings", "Benchmark"]),
+      dependencies: ["strings", .product(name: "Benchmark", package: "swift-benchmark")]),
     .testTarget(
       name: "stringsTests",
       dependencies: ["strings"])
