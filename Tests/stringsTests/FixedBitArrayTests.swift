@@ -1,26 +1,20 @@
-import XCTest
+import Testing
 @testable import strings
 
-final class FixedBitArrayTests: XCTestCase {
+struct FixedBitArrayTests {
 
-  func testDefaultValues() {
+  @Test func testDefaultValues() {
     let size = 10
     let storage = FixedBitArray(count: size)
-    XCTAssertEqual(size, storage.count)
+    #expect(size == storage.count)
 
     for i in 0..<size {
-      XCTAssertFalse(storage[i])
+      #expect(!storage[i])
     }
   }
 
-  func testModifyValues() {
-    _modifyValuesTest(size: 10)
-    _modifyValuesTest(size: 64)
-    _modifyValuesTest(size: 1024)
-    _modifyValuesTest(size: 1030)
-  }
-
-  func _modifyValuesTest(size: Int) {
+  @Test(arguments: [10, 64, 1024, 1030])
+  func testModifyValues(size: Int) {
     var storage = FixedBitArray(count: size)
     for i in 0..<size where  i % 2 == 0 {
       storage[i] = true
@@ -28,9 +22,9 @@ final class FixedBitArrayTests: XCTestCase {
 
     for i in 0..<size {
       if i % 2 == 0 {
-        XCTAssertTrue(storage[i])
+        #expect(storage[i])
       } else {
-        XCTAssertFalse(storage[i])
+        #expect(!storage[i])
       }
     }
 
@@ -39,7 +33,7 @@ final class FixedBitArrayTests: XCTestCase {
     }
 
     for i in 0..<size {
-      XCTAssertFalse(storage[i])
+      #expect(!storage[i])
     }
   }
 }
