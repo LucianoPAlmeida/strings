@@ -10,7 +10,8 @@ jobs:
   Darwin:
 
     runs-on: macos-latest
-
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.app/Contents/Developer
     steps:
     - uses: actions/checkout@v2
     - name: Build
@@ -19,8 +20,8 @@ jobs:
       run: swift test --parallel
 
   Linux:
-    runs-on: [ubuntu-18.04] 
-    container: swift:5.3.3
+    runs-on: [ubuntu-latest]
+    container: swift:6.0.0
     steps:
       - uses: actions/checkout@v1
       - name: Linux

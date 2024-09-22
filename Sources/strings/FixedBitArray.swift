@@ -1,4 +1,10 @@
-import Darwin
+//
+//  FixedBitArray.swift
+//
+//
+//  Created by Luciano Almeida on 16/03/21.
+//
+// ===----------------------------------------------------------------------===//
 
 @usableFromInline
 internal struct FixedBitArray {
@@ -29,7 +35,7 @@ internal struct FixedBitArray {
     get {
       assert(0..<count ~= idx, "Out of bounds index!")
       let (pos, posIdx) = idx.quotientAndRemainder(dividingBy: FixedBitArray._bitsPerWord)
-      return _words.withUnsafeBufferPointer{ $0[pos] } & (1 << posIdx) != 0
+      return _words.withUnsafeBufferPointer { $0[pos] } & (1 << posIdx) != 0
     }
     set {
       assert(0..<count ~= idx, "Out of bounds index!")

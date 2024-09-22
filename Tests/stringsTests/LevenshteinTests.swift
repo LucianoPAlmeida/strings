@@ -5,26 +5,26 @@
 //
 //  Created by Luciano Almeida on 15/12/20.
 //
-import XCTest
+import Testing
 import strings
 
-final class LevenshteinTests: XCTestCase {
-
-  func testLevenshteinDistances() {
-    XCTAssertEqual("friend".levenshteinDistance(to: ""), 6)
-    XCTAssertEqual("friend".levenshteinDistance(to: "fresh"), 3)
-    XCTAssertEqual("friend".levenshteinDistance(to: "friend"), 0)
-    XCTAssertEqual("friend".levenshteinDistance(to: "fried"), 1)
-    XCTAssertEqual("rick".levenshteinDistance(to: "rcik"), 2)
-    XCTAssertEqual("rick".levenshteinDistance(to: "irkc"), 3)
-    XCTAssertEqual("irkc".levenshteinDistance(to: "rcik"), 4)
-    XCTAssertEqual("test".levenshteinDistance(to: "team"), 2)
-    XCTAssertEqual("".levenshteinDistance(to: "team"), 4)
-    XCTAssertEqual("test".levenshteinDistance(to: ""), 4)
-    XCTAssertEqual("adlsajdlsa".levenshteinDistance(to: "asv"), 8)
-  }
-
-  static var allTests = [
-    ("testLevenshteinDistances", testLevenshteinDistances)
+struct LevenshteinTests {
+  static let values: [DistanceExpectation<Int>] = [
+    DistanceExpectation(source: "friend", target: "", expectedValue: 6),
+    DistanceExpectation(source: "friend", target: "fresh", expectedValue: 3),
+    DistanceExpectation(source: "friend", target: "friend", expectedValue: 0),
+    DistanceExpectation(source: "friend", target: "fried", expectedValue: 1),
+    DistanceExpectation(source: "rick", target: "rcik", expectedValue: 2),
+    DistanceExpectation(source: "rick", target: "irkc", expectedValue: 3),
+    DistanceExpectation(source: "irkc", target: "rcik", expectedValue: 4),
+    DistanceExpectation(source: "test", target: "team", expectedValue: 2),
+    DistanceExpectation(source: "", target: "team", expectedValue: 4),
+    DistanceExpectation(source: "test", target: "", expectedValue: 4),
+    DistanceExpectation(source: "adlsajdlsa", target: "asv", expectedValue: 8)
   ]
+
+  @Test(arguments: values)
+  func testLevenshteinDistances(expectation: DistanceExpectation<Int>) {
+    #expect(expectation.source.levenshteinDistance(to: expectation.target) == expectation.expectedValue)
+  }
 }

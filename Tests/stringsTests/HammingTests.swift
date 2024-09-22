@@ -5,19 +5,19 @@
 //  Created by Luciano Almeida on 16/03/21.
 //
 
-import XCTest
+import Testing
 import strings
 
-final class HammingTests: XCTestCase {
-
-  func testHammingDistances() {
-    XCTAssertEqual("friend".hammingDistance(to: "friend"), 0)
-    XCTAssertEqual("friend".hammingDistance(to: "frinnd"), 1)
-    XCTAssertEqual("test".hammingDistance(to: "team"), 2)
-    XCTAssertEqual("".hammingDistance(to: ""), 0)
-  }
-
-  static var allTests = [
-    ("testHammingDistances", testHammingDistances)
+struct HammingTests {
+  static let values: [DistanceExpectation<Int>] = [
+    DistanceExpectation(source: "friend", target: "friend", expectedValue: 0),
+    DistanceExpectation(source: "friend", target: "frinnd", expectedValue: 1),
+    DistanceExpectation(source: "test", target: "team", expectedValue: 2),
+    DistanceExpectation(source: "", target: "", expectedValue: 0)
   ]
+
+  @Test(arguments: values)
+  func testHammingDistances(expectation: DistanceExpectation<Int>) {
+    #expect(expectation.source.hammingDistance(to: expectation.target) == expectation.expectedValue)
+  }
 }
