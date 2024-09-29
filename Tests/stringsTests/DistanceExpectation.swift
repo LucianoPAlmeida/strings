@@ -10,3 +10,5 @@ struct DistanceExpectation<DistanceValue: Numeric> {
   let target: String
   let expectedValue: DistanceValue
 }
+
+extension DistanceExpectation: Sendable where DistanceValue: Sendable {}
