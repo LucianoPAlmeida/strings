@@ -1,8 +1,8 @@
 # strings
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
-[![Swift](https://img.shields.io/badge/Swift-5.4-orange.svg)](https://swift.org)
-[![Xcode](https://img.shields.io/badge/Xcode-12.5-blue.svg)](https://developer.apple.com/xcode)
+[![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
+[![Xcode](https://img.shields.io/badge/Xcode-16.0-blue.svg)](https://developer.apple.com/xcode)
 [![SPM](https://img.shields.io/badge/SPM-orange.svg)](https://swift.org/package-manager/)
 [![Swift](https://github.com/LucianoPAlmeida/strings/actions/workflows/swift.yml/badge.svg)](https://github.com/LucianoPAlmeida/strings/actions/workflows/swift.yml)
 
